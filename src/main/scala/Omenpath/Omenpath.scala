@@ -5,6 +5,7 @@ import scala.scalajs.js.annotation.*
 
 import org.scalajs.dom
 import com.raquo.laminar.api.L.{*, given}
+import _root_.Omenpath.Func.rotateVector
 
 @main
 def Omenpath(): Unit = {
@@ -32,26 +33,29 @@ object Main:
 
   def renderSlot(index: Int, initialSetCode: String, setCodeSignal: Signal[String]): Element = {
     div(
-      div(cls <-- getSlotClasses(index), 
-        renderWheel()
+      div( cls := "slot",
+        cls <-- currentSlotSignal.map{ (current: Int) =>
+          if (index < current) "stop" else "loop loop" + index}, 
+        div(cls := "slot-inner",
+          renderWheel(initialSetCode)
+        )
       ),
       button(cls := "round",
         disabled <-- currentSlotSignal.map(_ != index),
-        onClick --> {_ => progressSlots()}
+        onClick --> {_ => currentSlot.update(_ + 1)}
       )
     )
   }
 
-  def renderWheel(): Element = {
-    div(cls := "slot-inner",
-      table(
-        children <-- Var(Data.ModernSets).signal.map(setList => setList.map { setCode => tr( td( img(src := "set/" + setCode + "/M.svg", role := "img")))}),
-        tr(
-          td(
-            img(src := "set/" + Data.ModernSets(0) + "/M.svg", role := "img")
+  def renderWheel(setCode: String): Element = {
+    table(
+      tbody{
+        val wheel = rotateVector(Data.ModernSets, setCode, 5)
+        val loopedWheel = wheel :+ wheel.head
+        loopedWheel.map(s =>
+          tr( td( img(src := "set/" + s + "/M.svg", role := "img")))
           )
-        )
-      )
+      }
     )
   }
 

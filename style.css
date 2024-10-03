@@ -40,7 +40,7 @@ body {
 
 h1 {
   font-family: "Beleren";
-  font-size: 3.2em;
+  font-size: 3.8em;
   line-height: 1.1;
 }
 
@@ -147,9 +147,9 @@ footer {
 .slot-main {
   display: block;
   position: relative;
-  background-color: #0f0f0faa;
+  background-color: #0f0f0fc9;
   width: 100vw;
-  height: 240px;
+  height: 280px;
   margin: 140px 0 150px 0;
   animation: tv-on 0.6s ease-in-out;
   transition: margin 0.6s ease-in-out;
@@ -175,7 +175,7 @@ footer {
   border: 3px solid black;
   outline: 5px solid rgba(240, 139, 6, 0.863);
   border-radius: 12px;
-  background-color: #1a1a1a;
+  background-color: black;
 }
 .slot .slot-inner {
   display: block;
@@ -187,7 +187,12 @@ footer {
 }
 .slot .slot-inner table td {
   width: 140px;
-  height: 100px;
+  height: 94px;
+  background-color: #111111;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-color: rgb(194, 67, 8);
+  margin: -2px;
 }
 .slot .slot-inner table td img {
   width: auto;
@@ -201,35 +206,35 @@ footer {
   -moz-animation: slide 13s infinite linear;
   animation: slide 13s infinite linear;
 }
-.loop2 .slot-inner {
+.loop1 .slot-inner {
   animation-delay: -0.4s;
   animation-duration: 12s;
 }
-.loop3 .slot-inner {
+.loop2 .slot-inner {
   animation-delay: -4s;
   animation-duration: 14s;
 }
-.loop4 .slot-inner {
+.loop3 .slot-inner {
   animation-delay: -1.2s;
   animation-duration: 17s;
 }
-.loop5 .slot-inner {
+.loop4 .slot-inner {
   animation-delay: -1.6s;
   animation-duration: 15s;
 }
-.loop6 .slot-inner {
+.loop5 .slot-inner {
   animation-delay: -2.0s;
   animation-duration: 16s;
 }
-.loop7 .slot-inner {
+.loop6 .slot-inner {
   animation-delay: -2.4s;
   animation-duration: 13s;
 }
 
 .stop .slot-inner {
-  -webkit-animation: stop 0.5s normal forwards ease-in-out;
-  -moz-animation: stop 0.5s normal forwards ease-in-out;
-  animation: stop 0.5s normal linear;
+  -webkit-animation: stop 2s normal forwards ease-out;
+  -moz-animation: stop 2s normal forwards ease-out;
+  animation: stop 2s normal forwards ease-out;
   animation-iteration-count: 1;
 }
 
@@ -247,7 +252,6 @@ footer {
     -webkit-transform: scaleY(1);
   }
 }
-
 @-moz-keyframes tv-on {
   0% {
     -moz-transform: scaleY(0);
@@ -256,7 +260,6 @@ footer {
     -moz-transform: scaleY(1);
   }
 }
-
 @keyframes tv-on {
   0% {
     transform: scaleY(0);
@@ -274,11 +277,61 @@ footer {
     transform: translateY(-99%);
   }
 }
-@-webkit-keyframes stop {
+@-moz-keyframes slide {
   0% {
-    transform: translateY(110px);
+    transform: translateY(0px);
   }
   100% {
-    transform: translateY(55px);
+    transform: translateY(-99%);
+  }
+}
+@keyframes slide {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-99%);
+  }
+}
+@-webkit-keyframes stop {
+  0% {
+    transform: translateY(0px);
+  }
+  94% {
+    transform: translateY(-520px);
+  }
+  97% {
+    transform: translateY(-504px);
+  }
+  100% {
+    transform: translateY(-512px);
+  }
+}
+@-moz-keyframes stop {
+  0% {
+    transform: translateY(0px);
+  }
+  94% {
+    transform: translateY(-520px);
+  }
+  97% {
+    transform: translateY(-504px);
+  }
+  100% {
+    transform: translateY(-512px);
+  }
+}
+@keyframes stop {
+  0% {
+    transform: translateY(0px);
+  }
+  94% {
+    transform: translateY(-520px);
+  }
+  97% {
+    transform: translateY(-504px);
+  }
+  100% {
+    transform: translateY(-512px);
   }
 }
