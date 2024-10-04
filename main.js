@@ -1,2 +1,2 @@
 import './style.css'
-import 'scalajs:main.js'
+import 'target/scala-3.5.0/omenpath-opt/main.js'
