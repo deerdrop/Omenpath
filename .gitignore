@@ -6,7 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+target/global-logging
+target/test-reports
+target/.history*
 
+# Package files
 node_modules
 dist
 dist-ssr
@@ -27,5 +31,12 @@ dist-ssr
 .bloop
 .bsp
 project
-target/*
-!target/omenpath-opt
+
+target/streams
+target/task-temp-directory
+target/scala-3.5.0/omenpath-fastopt
+target/scala-3.5.0/omenpath-test-fastopt
+target/scala-3.5.0/sync
+target/scala-3.5.0/test*
+target/scala-3.5.0/update
+target/scala-3.5.0/zinc
