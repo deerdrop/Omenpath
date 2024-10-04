@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Beleren";
-  src: url("public/fonts/beleren-b.ttf");
+  src: url("fonts/beleren-b.ttf");
 }
 
 :root {
@@ -51,27 +51,6 @@ h1 {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -86,6 +65,7 @@ button {
 button:enabled:hover {
   border-color: #646cff;
 }
+/*No cursor change on disabled buttons.*/
 button:disabled:hover {
   cursor: default;
 }
@@ -103,7 +83,7 @@ button.round {
   background-color: rgba(87, 48, 34, 0.75);
   border: 2px outset rgba(77, 36, 21, 0.65);
 }
-
+/*Make round buttons "glow" when enabled and "depress" when clicked.*/
 button.round:enabled {
   background-color: rgba(241, 117, 60, 0.85);
   border: 2px outset rgba(145, 76, 51, 0.65);
@@ -131,6 +111,7 @@ footer {
   left: 12px;
 }
 
+/*I don't actually know what this is this is left over from the demo and I'm not touching it.*/
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -162,11 +143,9 @@ footer {
   top: 50%;
   transform: translate(0, -50%);
 }
-
 .slots div {
   display: inline-block;
 }
-
 .slot {
   height: 100px;
   width: 140px;
@@ -175,20 +154,16 @@ footer {
   border: 3px solid black;
   outline: 5px solid rgba(240, 139, 6, 0.863);
   border-radius: 12px;
-  background-color: black;
 }
 .slot .slot-inner {
   display: block;
   height: auto;
   width: 100%;
-  /*background-image: url("public/speed-lines.png");
-  background-position: 0 0;
-  background-size: 120px 800px;*/
 }
 .slot .slot-inner table td {
   width: 140px;
   height: 94px;
-  background-color: #111111;
+  background-color: #4d5e649f;
   border-top: 2px solid;
   border-bottom: 2px solid;
   border-color: rgb(194, 67, 8);
@@ -201,6 +176,7 @@ footer {
   max-height: 80%;
   object-fit: contain;
 }
+
 .loop .slot-inner {
   -webkit-animation: slide 13s infinite linear;
   -moz-animation: slide 13s infinite linear;
@@ -240,7 +216,8 @@ footer {
 
 .hidden {
   visibility: hidden;
-  margin: -100px;
+  margin-top: -5%;
+  margin-bottom: -5%;
   animation-play-state: paused;
 }
 
@@ -271,18 +248,18 @@ footer {
 
 @-webkit-keyframes slide {
   0% {
-    transform: translateY(0px);
+    -webkit-transform: translateY(0px);
   }
   100% {
-    transform: translateY(-99%);
+    -webkit-transform: translateY(-99%);
   }
 }
 @-moz-keyframes slide {
   0% {
-    transform: translateY(0px);
+    -moz-transform: translateY(0px);
   }
   100% {
-    transform: translateY(-99%);
+    -moz-transform: translateY(-99%);
   }
 }
 @keyframes slide {
@@ -295,30 +272,30 @@ footer {
 }
 @-webkit-keyframes stop {
   0% {
-    transform: translateY(0px);
+    -webkit-transform: translateY(0px);
   }
   94% {
-    transform: translateY(-520px);
+    -webkit-transform: translateY(-520px);
   }
   97% {
-    transform: translateY(-504px);
+    -webkit-transform: translateY(-504px);
   }
   100% {
-    transform: translateY(-512px);
+    -webkit-transform: translateY(-512px);
   }
 }
 @-moz-keyframes stop {
   0% {
-    transform: translateY(0px);
+    -moz-transform: translateY(0px);
   }
   94% {
-    transform: translateY(-520px);
+    -moz-transform: translateY(-520px);
   }
   97% {
-    transform: translateY(-504px);
+    -moz-transform: translateY(-504px);
   }
   100% {
-    transform: translateY(-512px);
+    -moz-transform: translateY(-512px);
   }
 }
 @keyframes stop {
