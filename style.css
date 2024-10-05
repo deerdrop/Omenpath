@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Beleren";
-  src: url("fonts/beleren-b.ttf");
+  src: url("/fonts/beleren-b.ttf");
 }
 
 :root {
@@ -10,7 +10,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background: #636363 url("livia-prima-path-to-eternities1080.jpg") no-repeat fixed center;
+  background: #636363 url("/livia-prima-path-to-eternities1080.jpg") no-repeat fixed center;
   background-size: cover;
   background-blend-mode: multiply;
 
