@@ -34,9 +34,4 @@ project
 
 target/streams
 target/task-temp-directory
-target/scala-3.5.0/omenpath-fastopt
-target/scala-3.5.0/omenpath-test-fastopt
-target/scala-3.5.0/sync
-target/scala-3.5.0/test*
-target/scala-3.5.0/update
-target/scala-3.5.0/zinc
+target/scala-3.5.0/*
