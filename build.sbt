@@ -1,9 +1,9 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
 
-lazy val Omenpath = project.in(file("."))
+lazy val omenpath = project.in(file("."))
   .enablePlugins(ScalaJSPlugin) // Enable the Scala.js plugin in this project
   .settings(
-    scalaVersion := "3.5.0",
+    scalaVersion := "3.6.1",
 
     // Tell Scala.js that this is an application with a main method
     scalaJSUseMainModuleInitializer := true,
@@ -18,7 +18,7 @@ lazy val Omenpath = project.in(file("."))
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
         .withModuleSplitStyle(
-          ModuleSplitStyle.SmallModulesFor(List("livechart")))
+          ModuleSplitStyle.SmallModulesFor(List("omenpath")))
     },
 
     /* Depend on the scalajs-dom library.

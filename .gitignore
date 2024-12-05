@@ -12,6 +12,7 @@ target/.history*
 
 # Package files
 node_modules
+dist
 dist-ssr
 *.local
 
@@ -20,6 +21,7 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+.directory
 *.suo
 *.ntvs*
 *.njsproj
@@ -34,3 +36,4 @@ project
 target/streams
 target/task-temp-directory
 target/scala-3.5.0/*
+target/scala-3.6.1/*
