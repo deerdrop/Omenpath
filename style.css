@@ -84,9 +84,8 @@ button:enabled:focus-visible {
 
 button.round {
   width: 20px;
-  height: 40px;
+  height: 42px;
   margin-top: 16px;
-  margin-bottom: 8px;
   background-color: rgba(87, 48, 34, 0.75);
   border: 2px outset rgba(77, 36, 21, 0.65);
   border-radius: 50%;
@@ -127,6 +126,7 @@ footer {
   width: 100vw;
   min-height: 280px;
   margin: 140px 0 150px 0;
+  padding: 12px 0px;
   animation: tv-on 0.6s ease-in-out;
   transition: margin 0.6s ease-in-out;
 }
@@ -136,6 +136,7 @@ footer {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  margin: 2px;
 }
 
 .slot {
