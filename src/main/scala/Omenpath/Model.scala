@@ -21,7 +21,7 @@ final class Model: // Data Model for communicating data to front end.
   val currentSlot: Var[Int] = Var(0)
   val currentSlotSignal = currentSlot.signal
 
-  val slotContainerClass: Var[String] = Var("slot-main hidden") // For unhiding the slots.
+  val slotContainerClass: Var[String] = Var("hidden") // For unhiding the slots.
   val slotContainerClassSignal = slotContainerClass.signal
 
   val btnClass: Var[String] = Var("") // For hiding the button.
@@ -33,7 +33,7 @@ final class Model: // Data Model for communicating data to front end.
     setData.update(_ => 
       (getRotation(ModernSets, SeasonRecord("Season " + (newSeason-1)) ++ SeasonRecord("Season " + (newSeason-2)))))
     btnClass.update(_ => "hidden")
-    slotContainerClass.update(_ => "slot-main")
+    slotContainerClass.update(_ => "")
   }
   
 end Model

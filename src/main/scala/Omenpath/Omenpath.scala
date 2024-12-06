@@ -22,27 +22,32 @@ object Main:
   def appElement(): Element = {
     div(
       h1(idAttr := "title", "Omenpath Season " + Data.newSeason + " Rotation"),
-      div( cls <-- slotContainerClassSignal,
-        div( cls := "slots",
-          children <-- setDataSignal.splitByIndex (renderSlot)
-        )
+      div( cls := "slots-main",                                                   // Container for all the slots with transparent bg
+        cls <-- slotContainerClassSignal,                                         // Signal to have container hidden at start
+        children <-- setDataSignal.splitByIndex (renderSlot)
       ),
       button("Open the Paths", cls <-- btnClassSignal, onClick --> (_ => rollSets(Data.newSeason))),
     )
   }
 
   def renderSlot(index: Int, initialSetCode: String, setCodeSignal: Signal[String]): Element = {
-    div(
+    div( cls := "slot-section",                                                   // Each section contains the slot itself, a display, and a button
       div( cls := "slot",
         cls <-- currentSlotSignal.map{ (current: Int) =>
-          if (index < current) "stop" else "loop loop" + index}, 
+          if (index >= current) "loop loop" + index else "stop" },                // Slot begins in loop animation, then stops when its index is reached
         div(cls := "slot-inner",
           renderWheel(initialSetCode)
         )
       ),
+      div ( cls := "display dotmatrix",
+        p( initialSetCode,
+          cls <-- currentSlotSignal.map { (current: Int) =>
+          if (index >= current) "hidden" else "" },                               // Display begins empty, then turns on when its index is reached
+        )
+      ),
       button(cls := "round",
-        disabled <-- currentSlotSignal.map(_ != index),
-        onClick --> {_ => currentSlot.update(_ + 1)}
+        disabled <-- currentSlotSignal.map(_ != index),                           // Button is enabled only if its exact index is reached
+        onClick --> {_ => currentSlot.update(_ + 1)}                              // Clicking the button increments the current slot index
       )
     )
   }
@@ -50,9 +55,9 @@ object Main:
   def renderWheel(setCode: String): Element = {
     table(
       tbody{
-        val wheel = rotateVector(Data.ModernSets, setCode, 5)
-        val loopedWheel = wheel :+ wheel.head
-        loopedWheel.map(s =>
+        val wheel = rotateVector(Data.ModernSets, setCode, 5)                     // Put the desired set code at the 5th position
+        val loopedWheel = wheel :+ wheel.head                                     // Copy the first element to the end for a smooth loop
+        loopedWheel.map(s =>                                                      // Translate the set codes into the appropriate set symbol
           tr( td( img(src := "set/" + s + "/M.svg", role := "img")))
           )
       }
