@@ -22,7 +22,7 @@
 }
 
 .dotmatrix {
-  font-family: "Silkscreen", sans-serif;
+  font-family: "Silkscreen", 'Lucida Sans Unicode', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 22px;
@@ -83,11 +83,13 @@ button:enabled:focus-visible {
 }
 
 button.round {
-  border-radius: 50%;
   width: 20px;
   height: 40px;
+  margin-top: 16px;
+  margin-bottom: 8px;
   background-color: rgba(87, 48, 34, 0.75);
   border: 2px outset rgba(77, 36, 21, 0.65);
+  border-radius: 50%;
 }
 /*Make round buttons "glow" when enabled and "depress" when clicked.*/
 button.round:enabled {
@@ -203,11 +205,15 @@ footer {
 }
 
 .display {
-  height: 30px;
+  height: 40px;
   width: 80px;
   background-color: rgb(5, 5, 5);
   border: 5px solid rgb(102, 102, 102);
   border-radius: 8px;
+}
+
+.display p {
+  margin: auto;
 }
 
 .hidden {
