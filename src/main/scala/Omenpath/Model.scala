@@ -15,16 +15,19 @@ final class Model: // Data Model for communicating data to front end.
 
   // Mutable variables and signals.
 
-  val setData: Var[SetList] = Var(Vector()) // For communicating a list of sets.
+  val setData: Var[SetList] = Var(Vector())           // For communicating a list of sets.
   val setDataSignal = setData.signal
 
-  val currentSlot: Var[Int] = Var(0)
+  val currentSlot: Var[Int] = Var(0)                  // For tracking which slots are spinning and which are stopped.
   val currentSlotSignal = currentSlot.signal
+
+  val currentDisplay: Var[Int] = Var(0)               // For tracking which set code displays are active.
+  val currentDisplaySignal = currentDisplay.signal
 
   val slotContainerClass: Var[String] = Var("hidden") // For unhiding the slots.
   val slotContainerClassSignal = slotContainerClass.signal
 
-  val btnClass: Var[String] = Var("") // For hiding the button.
+  val btnClass: Var[String] = Var("")                 // For hiding the button.
   val btnClassSignal = btnClass.signal
 
   // Front-end & update functions

@@ -41,13 +41,14 @@ object Main:
       ),
       div ( cls := "display dotmatrix",
         p( initialSetCode,
-          cls <-- currentSlotSignal.map { (current: Int) =>
+          cls <-- currentDisplaySignal.map { (current: Int) =>
           if (index >= current) "hidden" else "" },                               // Display begins empty, then turns on when its index is reached
         )
       ),
       button(cls := "round",
-        disabled <-- currentSlotSignal.map(_ != index),                           // Button is enabled only if its exact index is reached
-        onClick --> {_ => currentSlot.update(_ + 1)}                              // Clicking the button increments the current slot index
+        disabled <-- currentSlotSignal.combineWithFn(currentDisplaySignal)(_ != index || _ != index),  // Button is enabled only if both its slot's index and its display's index have been reached.
+        onClick --> {_ => currentSlot.update(_ + 1)},                             // Clicking the button increments the current slot index
+        onClick(_.delay(2000)) --> {_ => currentDisplay.update(_ + 1)}            // Clicking the button also increments the current display index, after a 2 second delay
       )
     )
   }
