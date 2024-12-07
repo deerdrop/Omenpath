@@ -32,17 +32,17 @@ object Main:
 
   def renderSlot(index: Int, initialSetCode: String, setCodeSignal: Signal[String]): Element = {
     div( cls := "slot-section",                                                   // Each section contains the slot itself, a display, and a button
+      div ( cls := "display dotmatrix",
+        p( initialSetCode,
+          cls <-- currentDisplaySignal.map { (current: Int) =>
+          if (index >= current) "hidden" else "" },                               // Display begins empty, then turns on when its index is reached
+        )
+      ),
       div( cls := "slot",
         cls <-- currentSlotSignal.map{ (current: Int) =>
           if (index >= current) "loop loop" + index else "stop" },                // Slot begins in loop animation, then stops when its index is reached
         div(cls := "slot-inner",
           renderWheel(initialSetCode)
-        )
-      ),
-      div ( cls := "display dotmatrix",
-        p( initialSetCode,
-          cls <-- currentDisplaySignal.map { (current: Int) =>
-          if (index >= current) "hidden" else "" },                               // Display begins empty, then turns on when its index is reached
         )
       ),
       button(cls := "round",
