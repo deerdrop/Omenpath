@@ -285,7 +285,7 @@ p.hidden {
 
 @-webkit-keyframes stop {
   0% {
-    -webkit-transform: translateY(-1024px);
+    -webkit-transform: translateY(-1200px);
   }
   94% {
     -webkit-transform: translateY(-504px);
@@ -299,7 +299,7 @@ p.hidden {
 }
 @-moz-keyframes stop {
   0% {
-    -moz-transform: translateY(-1024px);
+    -moz-transform: translateY(-1200px);
   }
   94% {
     -moz-transform: translateY(-504px);
@@ -313,7 +313,7 @@ p.hidden {
 }
 @keyframes stop {
   0% {
-    transform: translateY(-1024px);
+    transform: translateY(-1200px);
   }
   94% {
     transform: translateY(-504px);
