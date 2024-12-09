@@ -113,9 +113,26 @@ button.round:enabled:active {
 }
 
 footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
-  bottom: 10px;
-  left: 12px;
+  bottom: 0px;
+  width: 100vw;
+  background-color: black;
+}
+
+#artist {
+  align-self: flex-start;
+  margin: 4px;
+  margin-left: 16px;
+  min-width: 140px;
+}
+
+#disclaimer {
+  text-align: right;
+  margin: 4px;
+  margin-right: 24px;
 }
 
 .slots-main {
