@@ -1,9 +1,0 @@
- sbt
- > ~fastLinkJS
-
- npm run dev
-
--------------
-fullLinkJS
-
-npm run build
