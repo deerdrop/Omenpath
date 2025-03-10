@@ -29,6 +29,9 @@ lazy val omenpath = project.in(file("."))
     // Depend on Laminar
     libraryDependencies += "com.raquo" %%% "laminar" % "17.0.0",
 
+    // Depend on Laminext Fetch
+    libraryDependencies += "dev.laminext" %%% "fetch" % "0.17.1",
+
     // Testing framework
     libraryDependencies += "org.scalameta" %%% "munit" % "1.0.0" % Test,
   )

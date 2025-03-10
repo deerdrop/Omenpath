@@ -4,9 +4,15 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.*
 
 import org.scalajs.dom
+import org.scalajs.dom.Response
+
 import com.raquo.laminar.api.L.{*, given}
+import io.laminext.fetch.* 
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import _root_.Omenpath.Data.*
+
 
 type SetList = Vector[String]
 
@@ -53,6 +59,13 @@ object Func: // Backend Functions
     val coreSetsFromShuffledList = sets.filter(Data.CoreSets.contains(_))    // Filter the list to only the core sets, preserving their order.
     sets.diff(coreSetsFromShuffledList.drop(2))                         // Remove all but the first two core sets from the list.
   }
+  // Checks if the first N sets of a list of sets meets the required minimum card count.
+  /*def requiredCount(sets: SetList, setCount: Int): SetList = {
+    // This line creates the Scryfall search query URL for the list of cards in the first N sets.
+    val queryURL = "https://api.scryfall.com/cards/search?q=(game%3Apaper)+(s%3A" + sets.take(setCount).mkString("+or+s%3A") + ")"
+    val response: scala.concurrent.Future[FetchResponse[ArrayBuffer]] = Fetch.get(queryURL)
+    if response.
+  }*/
   
   // Takes a vector and moves some number of elements from the front to the back or vice versa to move the pivot element (first instance of) to the specified position (index).
   def rotateVector[A](v: Vector[A], pivot: A, pos: Int): Vector[A] = {
