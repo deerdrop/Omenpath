@@ -34,4 +34,5 @@ lazy val omenpath = project.in(file("."))
 
     // Testing framework
     libraryDependencies += "org.scalameta" %%% "munit" % "1.0.0" % Test,
+    libraryDependencies += "org.scalamock" %% "scalamock" % "7.1.0" % Test,
   )

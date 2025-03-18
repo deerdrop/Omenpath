@@ -7,9 +7,11 @@ import org.scalajs.dom
 import org.scalajs.dom.Response
 
 import com.raquo.laminar.api.L.{*, given}
-import io.laminext.fetch.* 
+import io.laminext.fetch.{Fetch, FetchResponse}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.*
+import scala.concurrent.duration.*
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 import _root_.Omenpath.Data.*
 
@@ -81,5 +83,45 @@ object Func: // Backend Functions
         splitV._2 ++ splitV._1
       }
   }
+
+  // Case classes for detailed API Response Structure
+  case class ApiResponse(status: String, data: ApiData)
+  trait ApiData
+  case class ScryfallApiListData(object_type: String, total_cards: Option[Int], has_more: Boolean, next_page: Option[String], warnings: Option[Array[String]], data: Any) extends ApiData  
+
+  // Makes an API fetch request 
+  def fetchData(url: String, headers: Map[String, String], parseData: js.Dynamic => ApiResponse): ApiResponse = {
+    Fetch.get(url, headers).future.json().flatMap { response =>
+      if (response.ok) {
+        // Successfully fetched the data, now attempt to parse it
+        try {
+          parseData(response.asInstanceOf[js.Dynamic])
+        } catch {
+          case e: Exception => handleFailedJSONParse(e)
+        }
+      } else {
+        // Handle error response
+        Future.failed(new Exception("Failed to fetch API data"))
+      }
+    }
+  }
+
+  def parseScryfallListData(json: js.Dynamic): ApiResponse = {
+    val status = json.status.toString
+    val jsonData = json.data
+
+    val data = ScryfallApiListData(
+      object_type = jsonData.`object`.toString,
+      total_cards = Option(jsonData.total_cards).map(_.toString.toInt),
+      has_more = jsonData.has_more.asInstanceOf[Boolean],
+      next_page = Option(jsonData.next_page).map(_.toString),
+      warnings = Option(jsonData.warnings).map(_.asInstanceOf[Array[String]]),
+      data = jsonData.data
+    )
+    ApiResponse(status, data)
+  }
+
+  def handleFailedJSONParse(e: Exception): Unit = { println("oops") }
+
 
 end Func
