@@ -9,13 +9,30 @@ import com.raquo.laminar.api.L.{*, given}
 import io.laminext.fetch.{Fetch, FetchResponse}
 
 import scala.concurrent.*
-import scala.concurrent.duration.*
+import scala.concurrent.duration.* 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.util.{Failure, Success}
 
 import org.scalamock.stubs.Stubs
 
 import _root_.Omenpath.Func.*
 import _root_.Omenpath.Data.*
+import org.scalajs.dom.Headers
+import scala.annotation.experimental
+import scala.annotation.switch
+
+extension [A](obj: Future[A]) {
+  /** Returns a [[Future]] that completes after the specified duration. */
+  def delay(duration: FiniteDuration): Future[A] = {
+    val promise = scala.concurrent.Promise[Unit]()
+    obj.transformWith { result =>
+      val _ = scalajs.js.timers.setTimeout(duration) {
+        promise.success(())
+      }
+      promise.future.flatMap(_ => Future.fromTry(result))
+    }
+  }
+}
 
 class ModelSuite extends munit.FunSuite {
   test("rotateVector Test") {
@@ -54,53 +71,63 @@ class ModelSuite extends munit.FunSuite {
       )
     )
     val parsedResponse = parseScryfallListData(mockResponseJson)
+    assertEquals(parsedResponse.object_type, "list")
+    assertEquals(parsedResponse.total_cards, 604)
+    assertEquals(parsedResponse.has_more, true)
+    assertEquals(parsedResponse.next_page, "https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&include_variations=false&order=name&page=2&q=c%3Awhite+mv%3D1&unique=cards")
+    assertEquals(parsedResponse.warnings.toSeq, Array[String]().toSeq)
   }
 }
 
-class ApiServiceTest extends munit.FunSuite with org.scalamock.stubs.Stubs {
-
-  test("fetchData should return ApiResponse when fetch is successful") {
-    // Step 1: Mock the Fetch response
-    val url = "https://api.scryfall.com/cards/search?q=c%3Awhite+mv%3D1"
-    val mockResponseJson = js.Dynamic.literal(
-      "object" -> "list",
-      "total_cards" -> 604,
-      "has_more" -> true,
-      "next_page" -> "https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&include_variations=false&order=name&page=2&q=c%3Awhite+mv%3D1&unique=cards",
-      "data" -> js.Array(
-        js.Dynamic.literal(
-          "object" -> "card",
-          "id" -> "023b5e6f-10de-422d-8431-11f1fdeca246",
-          "name" -> "Abu Ja'far",
-          "released_at" -> "1995-07-01",
-          "image_uris" -> js.Dynamic.literal("small" -> "https://cards.scryfall.io/small/front/0/2/023b5e6f-10de-422d-8431-11f1fdeca246.jpg?1562895407"),
-          "mana_cost" -> "{W}",
-          "type_line" -> "Creature — Human",
-          "rarity" -> "uncommon",
-          "artist" -> "Ken Meyer, Jr."
-        )
+class ApiServiceTest extends munit.FunSuite {
+  // Step 1: Mock the Fetch response
+  val testUrl = "https://api.scryfall.com/cards/search?q=c%3Awhite+mv%3D1"
+  val mockResponseJson = js.Dynamic.literal(
+    "object" -> "list",
+    "total_cards" -> 604,
+    "has_more" -> true,
+    "next_page" -> "https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&include_variations=false&order=name&page=2&q=c%3Awhite+mv%3D1&unique=cards",
+    "data" -> js.Array(
+      js.Dynamic.literal(
+        "object" -> "card",
+        "id" -> "023b5e6f-10de-422d-8431-11f1fdeca246",
+        "name" -> "Abu Ja'far",
+        "released_at" -> "1995-07-01",
+        "image_uris" -> js.Dynamic.literal("small" -> "https://cards.scryfall.io/small/front/0/2/023b5e6f-10de-422d-8431-11f1fdeca246.jpg?1562895407"),
+        "mana_cost" -> "{W}",
+        "type_line" -> "Creature — Human",
+        "rarity" -> "uncommon",
+        "artist" -> "Ken Meyer, Jr."
       )
     )
+  )
+// Step 2: Create mock fetcher which returns a mock response on correct inputs, and various failed results for improper inputs, after a delay
+  def fakeFetcher(url: String, headers: Map[String, String]): Future[FetchResponse[scala.scalajs.js.Any]] = {
+    val d500m = Duration(500, "millis")
+    if (url == testUrl && headers == scryfallFetchHeaders) {
+      Future.successful(new FetchResponse(true, 200, "sampletext", new Headers(), org.scalajs.dom.ResponseType.default, mockResponseJson, testUrl)).delay(d500m)
+    } else if (url == testUrl) {
+      Future.successful(new FetchResponse(false, 400, "sampletext", new Headers(), org.scalajs.dom.ResponseType.error, mockResponseJson, testUrl)).delay(d500m)
+    } else if (headers == scryfallFetchHeaders) {
+      Future.successful(new FetchResponse(true, 200, "sampletext", new Headers(), org.scalajs.dom.ResponseType.default, js.Dynamic.literal("object" -> "card", "name" -> "Abu Ja'far", "mana_cost" -> "{W}"), testUrl)).delay(d500m)
+    } else {
+      Future.failed(new Exception("Network Error"))
+    }
+  }
 
-    // Step 1.5: Create mock FetchResponse and return the mocked JSON
-    val fakeFR = stub[FetchResponse]
-    when(mockFetchResponse.json()).thenReturn(Future.successful(mockResponseJson))
-/*
-    // Step 2: Mock the Fetch.get method to return our mocked response
-    val fetchMock = mock[Fetch.type]
-    when(fetchMock.get(url)).thenReturn(mockFetchResponse)
-
+  test("fetchData should return ApiResponse when fetch is successful") { Future {
     // Step 3: Call the API method
-    val result = fetchData(url, scryfallFetchHeaders, parseScryfallListData)
+    
+    val result = fetchData(testUrl, scryfallFetchHeaders, parseScryfallListData, fakeFetcher)
 
     // Step 4: Assert the result in an asynchronous manner
     result.onComplete {
-      case Success(ApiResponse(object_type, total_cards, has_more, next_page, warnings, data)) =>
+      case Success(ScryfallApiListData(object_type, total_cards, has_more, next_page, warnings, data)) =>
         assertEquals(object_type, "list") // Ensure the data is correctly parsed
         assertEquals(total_cards, 604)
         assertEquals(has_more, true)
         assertEquals(next_page, "https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&include_variations=false&order=name&page=2&q=c%3Awhite+mv%3D1&unique=cards")
-        assertEquals(warnings, None)
+        assertEquals(warnings.toSeq, Array[String]().toSeq)
         assertEquals(data, js.Array(
           js.Dynamic.literal(
             "object" -> "card",
@@ -118,29 +145,38 @@ class ApiServiceTest extends munit.FunSuite with org.scalamock.stubs.Stubs {
       case Failure(exception) =>
         fail(s"Expected successful response but got failure: ${exception.getMessage}")
     }
-  }
+  }}
 
-  test("fetchData should fail when fetch returns an error") {
-    // Mock a failed network response
-    val url = "https://example.com/api"
-    val mockResponse = mock[FetchResponse]
+  // Step 5: Call the API method improperly and assert the failed results.
 
-    // Simulate a failure in the future (e.g., a network error)
-    when(mockResponse.json()).thenReturn(Future.failed(new Exception("Network Error")))
+  test("fetchData should fail when fetch returns an error") { Future {
+    val result = fetchData(testUrl, Map("bad" -> "header"), parseScryfallListData, fakeFetcher)
 
-    // Mock the Fetch.get method to return our mocked response
-    val fetchMock = mock[Fetch.type]
-    when(fetchMock.get(url)).thenReturn(mockResponse)
+    result.onComplete {
+      case Success(_) => fail("Expected failure but got success")
+      case Failure(exception) =>
+        assert(exception.getMessage == "Failed to fetch API data") // Ensure the error is correctly handled
+    }
+  }}
 
-    // Call the API method
-    val result = ApiService.fetchData(url)
+  test("fetchData should fail when fetch returns unexpected data") { Future {
+    val result = fetchData("wrong.url", scryfallFetchHeaders, parseScryfallListData, fakeFetcher)
 
-    // Assert the result should fail
+    result.onComplete {
+      case Success(_) => fail("Expected failure but got success")
+      case Failure(exception) =>
+        assert(exception.getMessage == "Error parsing API response") // Ensure the error is correctly handled
+    }
+  }}
+
+  test("fetchData should fail when fetch doesn't return") { Future {
+    val result = fetchData("bad.url", Map("bad" -> "header"), parseScryfallListData, fakeFetcher)
+
     result.onComplete {
       case Success(_) => fail("Expected failure but got success")
       case Failure(exception) =>
         assert(exception.getMessage == "Network Error") // Ensure the error is correctly handled
-    }*/
-  }
+    }
+  }}
 
 }

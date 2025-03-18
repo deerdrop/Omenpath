@@ -85,20 +85,19 @@ object Func: // Backend Functions
   }
 
   // Case classes for detailed API Response Structure
-  case class ApiResponse(status: String, data: ApiData)
   trait ApiData
-  case class ScryfallApiListData(object_type: String, total_cards: Option[Int], has_more: Boolean, next_page: Option[String], warnings: Option[Array[String]], data: Any) extends ApiData  
+  case class ScryfallApiListData(object_type: String, total_cards: Int, has_more: Boolean, next_page: String, warnings: Array[String], data: Any) extends ApiData
 
   // Makes an API fetch request 
-  def fetchData(url: String, headers: Map[String, String], parseData: js.Dynamic => ApiResponse): ApiResponse = {
-    Fetch.get(url, headers).future.json().flatMap { response =>
+  def fetchData[T <: ApiData](
+      url: String, headers: Map[String, String], 
+      parseData: js.Dynamic => T,
+      fetcher: (String, Map[String, String]) => Future[FetchResponse[scala.scalajs.js.Any]] = Fetch.get(_, _).future.json()
+    ): Future[T] = {
+    fetcher(url, headers).flatMap { response =>
       if (response.ok) {
         // Successfully fetched the data, now attempt to parse it
-        try {
-          parseData(response.asInstanceOf[js.Dynamic])
-        } catch {
-          case e: Exception => handleFailedJSONParse(e)
-        }
+          Future(parseData(response.data.asInstanceOf[js.Dynamic])).recoverWith { e => Future.failed(new Exception("Error parsing API response", e)) }
       } else {
         // Handle error response
         Future.failed(new Exception("Failed to fetch API data"))
@@ -106,22 +105,15 @@ object Func: // Backend Functions
     }
   }
 
-  def parseScryfallListData(json: js.Dynamic): ApiResponse = {
-    val status = json.status.toString
-    val jsonData = json.data
-
-    val data = ScryfallApiListData(
-      object_type = jsonData.`object`.toString,
-      total_cards = Option(jsonData.total_cards).map(_.toString.toInt),
-      has_more = jsonData.has_more.asInstanceOf[Boolean],
-      next_page = Option(jsonData.next_page).map(_.toString),
-      warnings = Option(jsonData.warnings).map(_.asInstanceOf[Array[String]]),
-      data = jsonData.data
+  def parseScryfallListData(json: js.Dynamic): ScryfallApiListData = {
+    ScryfallApiListData(
+      object_type = json.`object`.toString,
+      total_cards = json.total_cards.asInstanceOf[js.UndefOr[Int]].getOrElse(-1),
+      has_more = json.has_more.asInstanceOf[Boolean],
+      next_page = json.next_page.asInstanceOf[js.UndefOr[String]].getOrElse(""),
+      warnings = json.warnings.asInstanceOf[js.UndefOr[Array[String]]].getOrElse(Array[String]()),
+      data = json.data
     )
-    ApiResponse(status, data)
   }
-
-  def handleFailedJSONParse(e: Exception): Unit = { println("oops") }
-
 
 end Func
