@@ -31,8 +31,7 @@ dist-ssr
 .bloop
 .bsp
 project
+!project/build.properties
+!project/plugins.sbt
 
-target/streams
-target/task-temp-directory
-target/scala-3.5.0/*
-target/scala-3.6.1/*
+target/*
