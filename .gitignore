@@ -30,7 +30,7 @@ dist-ssr
 .metals
 .bloop
 .bsp
-project
+project/*
 !project/build.properties
 !project/plugins.sbt
 
