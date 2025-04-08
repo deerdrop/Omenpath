@@ -22,8 +22,8 @@ object Main:
   def appElement(): Element = {
     div(
       h1(idAttr := "title", "Omenpath Season " + Data.newSeason + " Rotation"),
-      div( cls := "slots-main",                                                   // Container for all the slots with transparent bg
-        cls <-- slotContainerClassSignal,                                         // Signal to have container hidden at start
+      div( cls := "slots-main",             // Container for all the slots with transparent bg
+        cls <-- slotContainerClassSignal,   // Signal to have container hidden at start
         children <-- setDataSignal.splitByIndex (renderSlot)
       ),
       button("Open the Paths", cls <-- btnClassSignal, onClick --> (_ => rollSets(Data.newSeason))),
@@ -31,16 +31,16 @@ object Main:
   }
 
   def renderSlot(index: Int, initialSetCode: String, setCodeSignal: Signal[String]): Element = {
-    div( cls := "slot-section",                                                   // Each section contains the slot itself, a display, and a button
+    div( cls := "slot-section",                              // Each section contains the slot itself, and a display
       div ( cls := "display dotmatrix",
         p( initialSetCode,
           cls <-- currentDisplaySignal.map { (current: Int) =>
-          if (index >= current) "hidden" else "" },                               // Display begins empty, then turns on when its index is reached
+          if (index >= current) "hidden" else "" },          // Display begins empty, then turns on when its index is reached
         )
       ),
       div( cls := "slot",
         cls <-- currentSlotSignal.map{ (current: Int) =>
-          if (index >= current) "loop loop" + index else "stop" },                // Slot begins in loop animation, then stops when its index is reached
+          if (index >= current) "loop loop" + index else "stop" },    // Slot begins in loop animation, then stops when its index is reached
         div(cls := "slot-inner",
           renderWheel(initialSetCode)
         )

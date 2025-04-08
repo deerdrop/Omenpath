@@ -36,7 +36,7 @@ extension [A](obj: Future[A]) {
 }
 
 final class Model: // Data Model for communicating data to front end.
-  import Func.{getRotation, rotateVector}
+  import Func.getRotation
 
   // Mutable variables and signals.
 
@@ -58,8 +58,10 @@ final class Model: // Data Model for communicating data to front end.
   // Front-end update functions and helper functions
 
   def rollSets(newSeason: Int): Unit = {
-    setData.update(_ => 
-      (getRotation(ModernSets, SeasonRecord("Season " + (newSeason-1)) ++ SeasonRecord("Season " + (newSeason-2)))))
+    setData.update(_ => getRotation(
+        ModernSets, SeasonRecord("Season " + (newSeason-1)) ++ SeasonRecord("Season " + (newSeason-2))
+      )
+    )
     startSlots()
   }
   def startSlots(): Unit = {
@@ -67,8 +69,8 @@ final class Model: // Data Model for communicating data to front end.
     slotContainerClass.update(_ => "")
   }
   
-  // If input is the string CON (Windows Reserved filename) return Conflux. Otherwise do nothing.
-  def fixCON(input: String): String = {
+  
+  def fixCON(input: String): String = {  // If input is the string CON (Windows Reserved filename) return Conflux. Otherwise do nothing.
     if (input=="CON") {"Conflux"}
     else (input)
   }
