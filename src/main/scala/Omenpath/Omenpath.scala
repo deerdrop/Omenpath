@@ -56,10 +56,10 @@ object Main:
   def renderWheel(setCode: String): Element = {
     table(
       tbody{
-        val wheel = rotateVector(Data.ModernSets, setCode, 5)                     // Put the desired set code at the 5th position
-        val loopedWheel = wheel :+ wheel.head                                     // Copy the first element to the end for a smooth loop
-        loopedWheel.map(s =>                                                      // Translate the set codes into the appropriate set symbol
-          tr( td( img(src := "set/" + s + "/M.svg", role := "img")))
+        val wheel = rotateVector(Data.ModernSets, setCode, 5) // Put the desired set code at the 5th position
+        val loopedWheel = wheel :+ wheel.head                 // Copy the first element to the end for a smooth loop
+        loopedWheel.map(s =>                                                    // Translate the set codes into the appropriate set symbol
+          tr( td( img(src := "set/" + fixCON(s) + "/M.svg", role := "img")))
           )
       }
     )

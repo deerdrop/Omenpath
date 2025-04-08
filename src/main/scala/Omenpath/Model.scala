@@ -55,7 +55,7 @@ final class Model: // Data Model for communicating data to front end.
   val btnClass: Var[String] = Var("")                 // For hiding the button.
   val btnClassSignal = btnClass.signal
 
-  // Front-end & update functions
+  // Front-end update functions and helper functions
 
   def rollSets(newSeason: Int): Unit = {
     setData.update(_ => 
@@ -67,6 +67,12 @@ final class Model: // Data Model for communicating data to front end.
     slotContainerClass.update(_ => "")
   }
   
+  // If input is the string CON (Windows Reserved filename) return Conflux. Otherwise do nothing.
+  def fixCON(input: String): String = {
+    if (input=="CON") {"Conflux"}
+    else (input)
+  }
+
 end Model
 
 object Func: // Backend Functions
@@ -127,7 +133,7 @@ object Func: // Backend Functions
     "q=(game%3Apaper)+(s%3A" + sets.mkString("+or+s%3A") + ")"
   }
   // Returns a SetList that meets the minimum card count, starting from the minimum set count and incrementing by 1.
-  def requiredCount(sets: SetList, setCount: Int): SetList = {
+  /*def requiredCount(sets: SetList, setCount: Int): SetList = {
     val queryURL = "https://api.scryfall.com/cards/search?" + getScryfallQuery(sets.take(setCount))
     val response = fetchData(queryURL, scryfallFetchHeaders, parseScryfallListData).delay(Duration(100, "millis"))
     response.onComplete {
@@ -136,7 +142,7 @@ object Func: // Backend Functions
         else {requiredCount(sets, setCount + 1)}
       case Failure(exception) => handleAPIFailure(exception, sets.take(setCount))
     }
-  }
+  }*/
 
   def handleAPIFailure[A](exception: Throwable, return_val: A) = {return_val}
 
