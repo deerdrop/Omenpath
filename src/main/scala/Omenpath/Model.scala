@@ -38,12 +38,14 @@ extension [A](obj: Future[A]) {
 final class Model: // Data Model for communicating data to front end.
   import Func.getRotation
 
+  val tickStream = EventStream.periodic(100)          // Basic interval stream, ticks up every 100ms
+
   // Mutable variables and signals.
 
   val setData: Var[SetList] = Var(Vector())           // For communicating a list of sets.
   val setDataSignal = setData.signal
 
-  val currentSlot: Var[Int] = Var(0)                  // For tracking which slots are spinning and which are stopped.
+  val currentSlot: Var[Int] = Var(0)                  // For tracking which slots are spinning and which are stopping/stopped.
   val currentSlotSignal = currentSlot.signal
 
   val currentDisplay: Var[Int] = Var(0)               // For tracking which set code displays are active.
@@ -54,6 +56,8 @@ final class Model: // Data Model for communicating data to front end.
 
   val btnClass: Var[String] = Var("")                 // For hiding the button.
   val btnClassSignal = btnClass.signal
+
+  
 
   // Front-end update functions and helper functions
 
@@ -67,6 +71,7 @@ final class Model: // Data Model for communicating data to front end.
   def startSlots(): Unit = {
     btnClass.update(_ => "hidden")
     slotContainerClass.update(_ => "")
+    tickStream.resetTo(0)
   }
   
   
