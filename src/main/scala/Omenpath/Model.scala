@@ -38,7 +38,13 @@ extension [A](obj: Future[A]) {
 final class Model: // Data Model for communicating data to front end.
   import Func.getRotation
 
+  //lazy val slotTicks = 
+
   val tickStream = EventStream.periodic(100)          // Basic interval stream, ticks up every 100ms
+
+  //val animationStream = tickStream.map( frame =>
+  //  for interval <- slotTimingIntervals
+  //)
 
   // Mutable variables and signals.
 

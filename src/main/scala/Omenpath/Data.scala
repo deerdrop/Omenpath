@@ -6,8 +6,8 @@ object Data:
   val minSetCount: Int = 7                    // Minimum number of sets for a valid Season.
   val lockoutSeasons: Int = 2                 // Number of Seasons for which a set is not allowed to reappear.
   val scryfallFetchHeaders = Map("User-Agent" -> "OmenpathSetApp/0.1", "Accept" -> "*/*")
-  val slotTimingIntervals = Vector(30, 15, 20, 25, 30, 35, 50, 80)  // Timing between slots being stopped, in ms.
-  val slotTimingFinalInterval: Int = 100      // Time between slots being stopped after the 8th, in ms.
+  lazy val slotTimingIntervals = Vector(30, 15, 18, 21, 25, 29, 34, 40)  // Timing between slots being stopped, in tenths of a second.
+  val slotTimingFinalInterval: Int = 48       // Time between slots being stopped after the 8th, in tenths of a second.
   val slotTimeUntilStop: Int = 2000           // Time it takes for a slot to stop spinning from full speed, in ms.
   lazy val ModernSets = Vector("TDM", "DFT", "FDN", "DSK", "BLB", "OTJ", "MKM", "LCI", "WOE", "MAT", "MOM", "ONE", "BRO", "DMU", "SNC", "NEO", "VOW", "MID", "AFR", "STX", "KHM", "ZNR", "M21", "IKO", "THB", "ELD", "M20", "WAR", "RNA", "GRN", "M19", "DOM", "RIX", "XLN", "HOU", "AKH", "AER", "KLD", "EMN", "SOI", "OGW", "BFZ", "ORI", "DTK", "FRF", "KTK", "M15", "JOU", "BNG", "THS", "M14", "DGM", "GTC", "RTR", "M13", "AVR", "DKA", "ISD", "M12", "NPH", "MBS", "SOM", "M11", "ROE", "WWK", "ZEN", "M10", "ARB", "CON", "ALA", "EVE", "SHM", "MOR", "LRW", "10E", "FUT", "PLC", "TSP", "CSP", "DIS", "GPT", "RAV", "9ED", "SOK", "BOK", "CHK", "5DN", "DST", "MRD", "8ED")
   lazy val CoreSets = Vector("FDN", "M21", "M20", "M19", "M15", "M14", "M13", "M12", "M11", "M10", "10E", "9ED", "8ED")
