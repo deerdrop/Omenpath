@@ -77,8 +77,8 @@ a:hover {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  padding: 0.8em 1em;
+  font-size: 1.8em;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
@@ -97,47 +97,19 @@ button:enabled:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-button.round {
-  width: 20px;
-  height: 42px;
-  margin: 12px;
-  background-color: rgba(87, 48, 34, 0.75);
-  border: 2px outset rgba(77, 36, 21, 0.65);
-  border-radius: 50%;
-}
-/*Make round buttons "glow" when enabled and "depress" when clicked.*/
-button.round:enabled {
-  background-color: rgba(241, 117, 60, 0.85);
-  border: 2px outset rgba(145, 76, 51, 0.65);
-  -webkit-box-shadow:0px 0px 15px 4px rgba(226, 157, 9, 0.85);
-  -moz-box-shadow: 0px 0px 15px 4px rgba(226, 157, 9, 0.85);
-  box-shadow: 0px 0px 15px 4px rgba(226, 157, 9, 0.85);
-}
-button.round:enabled:hover {
-  background-color: rgba(247, 132, 55, 0.85);
-  -webkit-box-shadow:0px 0px 18px 6px rgba(226, 168, 9, 0.9);
-  -moz-box-shadow: 0px 0px 18px 6px rgba(226, 168, 9, 0.9);
-  box-shadow: 0px 0px 18px 6px rgba(226, 168, 9, 0.9);
-}
-button.round:enabled:active {
-  background-color: rgba(224, 110, 57, 0.85);
-  border: 2px inset rgba(145, 76, 51, 0.65);
-  -webkit-box-shadow:0px 0px 15px 4px rgba(226, 157, 9, 0.85);
-  -moz-box-shadow: 0px 0px 15px 4px rgba(226, 157, 9, 0.85);
-  box-shadow: 0px 0px 15px 4px rgba(226, 157, 9, 0.85);
-}
-
-.slots-main {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.banner {
   background-color: rgba(15, 15, 15, 0.79);
   width: 100vw;
   min-height: 280px;
   margin: 140px 0 150px 0;
-  padding: 12px 0px;
-  animation: tv-on 0.6s ease-in-out;
-  transition: margin 0.6s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+.slots-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
 }
 .slot-section {
   display: flex;
@@ -145,6 +117,7 @@ button.round:enabled:active {
   justify-content: center;
   align-items: center;
   margin: 2px;
+  animation: tv-on 0.6s ease-in-out;
 }
 .slot {
   width: 140px;
@@ -183,33 +156,33 @@ button.round:enabled:active {
 }
 
 .loop .slot-inner {
-  -webkit-animation: slide 13s infinite linear;
-  -moz-animation: slide 13s infinite linear;
-  animation: slide 13s infinite linear;
+  -webkit-animation: slide 6.5s infinite linear;
+  -moz-animation: slide 6.5s infinite linear;
+  animation: slide 6.5s infinite linear;
 }
 .loop.slot1 .slot-inner {
   animation-delay: -0.4s;
-  animation-duration: 12s;
+  animation-duration: 6s;
 }
 .loop.slot2 .slot-inner {
   animation-delay: -4s;
-  animation-duration: 14s;
+  animation-duration: 7s;
 }
 .loop.slot3 .slot-inner {
   animation-delay: -1.2s;
-  animation-duration: 17s;
+  animation-duration: 8.5s;
 }
 .loop.slot4 .slot-inner {
   animation-delay: -1.6s;
-  animation-duration: 15s;
+  animation-duration: 7.5s;
 }
 .loop.slot5 .slot-inner {
   animation-delay: -2.0s;
-  animation-duration: 16s;
+  animation-duration: 8s;
 }
 .loop.slot6 .slot-inner {
   animation-delay: -2.4s;
-  animation-duration: 13s;
+  animation-duration: 6.5s;
 }
 
 .stop .slot-inner {
@@ -237,9 +210,10 @@ button.round:enabled:active {
 
 .hidden {
   visibility: hidden;
-  margin-top: -5%;
-  margin-bottom: -5%;
+  /*margin-top: -5%;
+  margin-bottom: -5%;*/
   animation-play-state: paused;
+  /*transform: scale(0);*/
 }
 
 p.hidden {
@@ -249,26 +223,26 @@ p.hidden {
 
 @-webkit-keyframes tv-on {
   0% {
-    -webkit-transform: scaleY(0);
+    -webkit-transform: scaleX(0);
   }
   100% {
-    -webkit-transform: scaleY(1);
+    -webkit-transform: scaleX(1);
   }
 }
 @-moz-keyframes tv-on {
   0% {
-    -moz-transform: scaleY(0);
+    -moz-transform: scaleX(0);
   }
   100% {
-    -moz-transform: scaleY(1);
+    -moz-transform: scaleX(1);
   }
 }
 @keyframes tv-on {
   0% {
-    transform: scaleY(0);
+    transform: scaleX(0);
   }
   100% {
-    transform: scaleY(1);
+    transform: scaleX(1);
   }
 }
 
@@ -299,7 +273,10 @@ p.hidden {
 
 @-webkit-keyframes stop {
   0% {
-    -webkit-transform: translateY(-1200px);
+    -webkit-transform: translateY(-2100px);
+  }
+  90% {
+    -webkit-transform: translateY(-528px);
   }
   94% {
     -webkit-transform: translateY(-504px);
@@ -313,7 +290,10 @@ p.hidden {
 }
 @-moz-keyframes stop {
   0% {
-    -moz-transform: translateY(-1200px);
+    -moz-transform: translateY(-2100px);
+  }
+  90% {
+    -moz-transform: translateY(-528px);
   }
   94% {
     -moz-transform: translateY(-504px);
@@ -327,7 +307,10 @@ p.hidden {
 }
 @keyframes stop {
   0% {
-    transform: translateY(-1200px);
+    transform: translateY(-2100px);
+  }
+  90% {
+    transform: translateY(-528px);
   }
   94% {
     transform: translateY(-504px);

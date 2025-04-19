@@ -38,14 +38,8 @@ extension [A](obj: Future[A]) {
 final class Model: // Data Model for communicating data to front end.
   import Func.getRotation
 
-  //lazy val slotTicks = 
-
-  val tickStream = EventStream.periodic(100)          // Basic interval stream, ticks up every 100ms
-
-  //val animationStream = tickStream.map( frame =>
-  //  for interval <- slotTimingIntervals
-  //)
-
+  val tickStream = EventStream.periodic(100)          // Basic interval stream, ticks up every 100ms.
+  
   // Mutable variables and signals.
 
   val setData: Var[SetList] = Var(Vector())           // For communicating a list of sets.
@@ -134,7 +128,7 @@ object Func: // Backend Functions
   def getRotation(legalSets: SetList, lockOut: SetList) = {
     val possibleSets = legalSets.diff(lockOut)                  // Remove the "locked out" sets (from previous rotations) from the list of available sets.
     val randomSets = scala.util.Random.shuffle(possibleSets)    // Shuffle the list of sets to get a random selection.
-    coreSetCheck(randomSets).take(7)                            // Remove any core sets after the first two.
+    coreSetCheck(randomSets).take(minSetCount)                  // Remove any core sets after the first two.
   }
   // Takes a list of sets and removes any core sets appearing after the first two.
   def coreSetCheck(sets: SetList): SetList = {
