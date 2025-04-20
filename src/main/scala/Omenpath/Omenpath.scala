@@ -11,109 +11,145 @@ import _root_.Omenpath.Data.slotKeyFrames
 import _root_.Omenpath.Func.getScryfallQuery
 
 @main
-def Omenpath(): Unit = {
+def Omenpath(): Unit =
   renderOnDomContentLoaded(
     dom.document.getElementById("app"),
     Main.appElement()
   )
-}
 
 object Main:
   val model = new Model
   import model.*
 
-  def appElement(): Element = {
+  def appElement(): Element =
     div(
       h1(idAttr := "title", "Omenpath Season " + Data.newSeason + " Rotation"),
-      div( cls := "banner",                     // Banner across the middle with translucent bg
-        div( cls := "slots-main",             // Container for hiding and then rendering the slots
-          cls <-- slotContainerClassSignal,   // Signal to have slots hidden at start
-          children <-- setDataSignal.splitByIndex (renderSlot)
+      div(cls := "banner",                  // Banner across the middle with translucent bg
+        div(
+          cls := "slots-main",              // Container for hiding and then rendering the slots
+          cls <-- slotContainerClassSignal, // Signal to have slots hidden at start
+          children <-- setDataSignal.splitByIndex(renderSlot)
         ),
-        button("Open the Paths", cls <-- btnClassSignal, onClick --> (_ => rollSets(Data.newSeason))),
-      ),
-      /*a( href <-- setDataSignal.map { "https://scryfall.com/search?" + getScryfallQuery(_) },
-        target := "_blank",
-        cls := "scryfall-button",
-        //visibility <-- tickStream.withCurrentValueOf(slotContainerClassSignal).map { (tick: Int, signal: String) => if (tick < slotKeyFrames(6)) "hidden" else signal},*/
-        scryfallButton(),
-      //)
-    )
-  }
-
-  def renderSlot(index: Int, initialSetCode: String, setCodeSignal: Signal[String]): Element = {
-    div( cls := "slot-section",                              // Each section contains the slot itself, and a display.
-      div ( cls := "display dotmatrix",
-        p( initialSetCode,
-          cls <-- tickStream.map { (tick: Int) =>            // Display begins empty, turns on when its slot has fully stopped.
-            if (tick < slotKeyFrames(index) + slotTimeUntilStop) "hidden" else "" },
+        button(
+          "Open the Paths",
+          cls <-- btnClassSignal,
+          onClick --> (_ => rollSets(Data.newSeason))
         )
       ),
-      div( cls := "slot slot" + index,
-        cls <-- tickStream.map { (tick: Int) =>               // Slot begins in loop animation, then begins stop animation
-          if (tick < slotKeyFrames(index)) "loop" else "stop" }, // when its keyframe tick is reached.
-        div(cls := "slot-inner",
-          renderWheel(initialSetCode)
-        )
+      div(
+        visibility <-- tickStream.withCurrentValueOf(slotContainerClassSignal).map { (tick: Int, signal: String) => if (tick < slotKeyFrames(6)) "hidden" else signal},
+        scryfallButton()
       )
     )
-  }
 
-  def renderWheel(setCode: String): Element = {
+  def renderSlot(
+      index: Int,
+      initialSetCode: String,
+      setCodeSignal: Signal[String]
+  ): Element =
+    div(cls := "slot-section",                // Each section contains the slot itself, and a display.
+      div(
+        cls := "display dotmatrix",
+        p(
+          initialSetCode,
+          cls <-- tickStream.map {
+            (tick: Int) =>                    // Display begins empty, turns on when its slot has fully stopped.
+              if (tick < slotKeyFrames(index) + slotTimeUntilStop) "hidden"
+              else ""
+          }
+        )
+      ),
+      div(
+        cls := "slot slot" + index,
+        cls <-- tickStream.map {
+          (tick: Int) => // Slot begins in loop animation, then begins stop animation
+            if (tick < slotKeyFrames(index)) "loop" else "stop"
+        }, // when its keyframe tick is reached.
+        div(cls := "slot-inner", renderWheel(initialSetCode))
+      )
+    )
+
+  def renderWheel(setCode: String): Element =
     table(
-      tbody{
-        val wheel = rotateVector(Data.ModernSets, setCode, 5) // Put the desired set code at the 5th position
-        val loopedWheel = wheel :+ wheel.head                 // Copy the first element to the end for a smooth loop
-        loopedWheel.map(s =>                                  // Translate the set codes into the appropriate set symbol
-          tr( td( img(src := "set/" + fixCON(s) + ".svg", role := "img")))
+      tbody {
+        val wheel = rotateVector(
+          Data.ModernSets,
+          setCode,
+          5
+        ) // Put the desired set code at the 5th position
+        val loopedWheel =
+          wheel :+ wheel.head // Copy the first element to the end for a smooth loop
+        loopedWheel.map(
+          s => // Translate the set codes into the appropriate set symbol
+            tr(td(img(src := "set/" + fixCON(s) + ".svg", role := "img")))
         )
       }
     )
-  }
 
   def scryfallButton(): Element = {
     svg.svg(
-      svg.width := "46",
-      svg.height := "46",
-      svg.viewBox := "0 0 460 460",
-      svg.xmlns := "http://www.w3.org/2000/svg",
+      svg.width   := "190px",
+      svg.height  := "120px",
+      svg.viewBox := "0 0 375 238",
+      svg.xmlns   := "http://www.w3.org/2000/svg",
+      svg.xmlnsXlink := "http://www.w3.org/1999/xlink",
+      svg.defs(
+        svg.linearGradient(
+          svg.idAttr            := "linearGradient3260",
+          svg.x1                := "250",
+          svg.x2                := "250",
+          svg.y1                := "53.1",
+          svg.y2                := "645",
+          svg.gradientTransform := "matrix(.267 0 0 .34 32.9 43.1)",
+          svg.gradientUnits     := "userSpaceOnUse",
+          svg.stop(svg.stopColor := "#1d1c25", svg.offsetAttr := "0"),
+          svg.stop(svg.stopColor := "#431e3f", svg.offsetAttr := "1")
+        )
+      ),
       svg.a(
-        svg.href <-- setDataSignal.map { "https://scryfall.com/search?" + getScryfallQuery(_) },
+        svg.href <-- setDataSignal.map {
+          "https://scryfall.com/search?" + getScryfallQuery(_)
+        },
         svg.target := "_blank",
         svg.g(
-          svg.transform := "translate(-60 -58)",
-          svg.fill := "none",
-          svg.fillRule := "evenodd",
-          svg.circle(
-            svg.fill := "#000",
-            svg.opacity := ".09",
-            svg.cx := "290",
-            svg.cy := "288",
-            svg.r := "230",
-          ),
+          svg.transform := "translate(37.7 -15.8)",
           svg.path(
-            svg.fill := "#BC979D",
-            svg.d := "M279.508 112.547l-.028 361.84 43.137 6.808 56.715-13.23 28.54-72.547-28.044-178.926-31.887-113.004",
+            svg.d := "m-34.4 29.1v172c7.66 21.6 20.9 27.3 34.4 32.1h206c0.84 10 1.89 16.6 3.16 17.6 7.49 6.2 125-90.9 125-103s-117-110-125-103c-1.26 1.04-2.3 7.48-3.14 17.4h-206c-14.3-2.01-25.2-14.5-34.4-32.1z",
+            svg.fill             := "url(#linearGradient3260)",
+            svg.stopColor        := "#000000",
+            svg.stroke           := "#000",
+            svg.strokeMiterLimit := "13",
+            svg.strokeOpacity    := ".515",
+            svg.strokeWidth      := "6.55",
+            svg.style            := "font-variation-settings:normal;paint-order:stroke fill markers"
           ),
-          svg.path(
-            svg.fill := "#AE7F9C",
-            svg.d := "M281.57 100.633l-2.457 383.13-67.972-21.888 13.9-355.852",
-          ),
-          svg.path(
-            svg.fill := "#786076",
-            svg.d := "M207.05 113.316v344.032S87.364 394.5 93.388 283.043C99.41 171.586 207.05 113.316 207.05 113.316z",
-          ),
-          svg.path(
-            svg.fill := "#947A92",
-            svg.d := "M237.375 107.21l-30.603 4.35s-20.682 10.42-37.922 25.5c-75.19 167.948 108.332 115.1-12.725 286.69 50.647 47.86 72.293 41.137 72.293 41.137l8.957-357.676z",
-          ),
-          svg.path(
-            svg.fill := "#FFF",
-            svg.d := "M343.058 89.985c-109.36-29.303-221.77 35.597-251.073 144.957-29.303 109.36 35.597 221.77 144.957 251.073 109.36 29.303 221.77-35.597 251.073-144.957 29.303-109.36-35.597-221.77-144.957-251.073zM256.342 451.95l.276.71c1.172 3.187 3.562 5.776 6.644 7.2 3.082 1.422 6.603 1.562 9.788.387l48.355-17.774c3.184-1.175 6.706-1.035 9.787.388 3.082 1.424 5.472 4.013 6.644 7.2l.19.56c2.105 5.852-.304 12.37-5.71 15.448-93.23 22.17-187.912-30.724-217.912-121.736s14.67-189.84 102.81-227.453c5.144.502 9.544 3.91 11.32 8.762 2.578 6.977 10.317 10.55 17.3 7.99l15.73-5.803c3.186-1.176 6.707-1.036 9.79.387 3.08 1.423 5.47 4.012 6.643 7.198l.19.56c1.174 3.185 1.034 6.706-.39 9.788-1.422 3.082-4.01 5.472-7.197 6.644l-109.46 40.366c-3.187 1.172-5.777 3.562-7.2 6.644-1.422 3.082-1.562 6.603-.388 9.788l.19.56c1.172 3.186 3.562 5.775 6.643 7.198 3.082 1.423 6.603 1.563 9.788.388l80.06-29.483c3.184-1.174 6.705-1.034 9.787.388 3.082 1.423 5.472 4.013 6.644 7.2l.19.56c1.173 3.184 1.034 6.705-.39 9.787-1.422 3.08-4.01 5.47-7.197 6.643l-127.814 47.08c-3.186 1.17-5.776 3.56-7.2 6.643-1.42 3.082-1.56 6.603-.387 9.788l.19.56c1.172 3.186 3.562 5.775 6.643 7.198 3.08 1.423 6.602 1.563 9.787.388L297.72 226.4c3.184-1.175 6.705-1.036 9.787.387 3.082 1.423 5.472 4.012 6.644 7.198l.467 1.27c1.174 3.186 1.035 6.707-.388 9.79-1.424 3.08-4.014 5.47-7.2 6.643l-113 41.54c-3.187 1.172-5.777 3.562-7.2 6.644-1.422 3.08-1.562 6.603-.387 9.787l.19.56c1.17 3.185 3.56 5.775 6.643 7.198 3.08 1.423 6.603 1.562 9.787.388l51.798-19.06c3.186-1.174 6.707-1.034 9.79.39 3.08 1.422 5.47 4.01 6.643 7.197l.19.56c1.174 3.185 1.034 6.706-.39 9.788-1.422 3.083-4.01 5.473-7.197 6.644l-89.085 32.754c-3.185 1.17-5.774 3.56-7.197 6.643-1.423 3.083-1.562 6.604-.388 9.79l.19.56c1.17 3.185 3.56 5.775 6.643 7.197 3.082 1.423 6.603 1.563 9.788.388L304.563 336.3c3.185-1.173 6.706-1.034 9.788.39 3.083 1.422 5.473 4.01 6.644 7.197l.19.56c1.174 3.185 1.035 6.706-.388 9.788s-4.013 5.472-7.198 6.644l-74.954 27.54c-3.186 1.17-5.776 3.56-7.2 6.643-1.422 3.082-1.56 6.603-.387 9.788l.19.56c1.172 3.187 3.562 5.777 6.643 7.2 3.082 1.422 6.603 1.562 9.788.387l94.147-34.537c3.185-1.175 6.706-1.035 9.788.388s5.472 4.012 6.644 7.198c2.428 6.58-.893 13.887-7.447 16.384l-86.903 33.168c-3.18 1.18-5.764 3.574-7.18 6.658-1.414 3.083-1.547 6.603-.367 9.784l-.018-.09z",
+          svg.g(
+            svg.transform    := "matrix(.315 0 0 .315 17.8 56.1)",
+            svg.fillRule     := "evenodd",
+            svg.circle(svg.cx := "290", svg.cy := "288", svg.r := "230", svg.opacity := ".09"),
+            svg.path(
+              svg.d := "m280 113-0.981 362 44.1 7.07 56.7-13.2 28.5-72.5-28-179-31.9-113",
+              svg.fill := "#bc979d"
+            ),
+            svg.path(
+              svg.d := "m282 101-2.46 383-68-21.9 13.9-356",
+              svg.fill := "#ae7f9c"
+            ),
+            svg.path(
+              svg.d := "m207 113v344s-120-62.8-114-174c6.02-111 114-170 114-170z",
+              svg.fill := "#786076"
+            ),
+            svg.path(
+              svg.d := "m237 107-30.6 4.35s-20.7 10.4-37.9 25.5c-75.2 168 108 115-12.7 287 50.6 47.9 72.3 41.1 72.3 41.1l8.96-358z",
+              svg.fill := "#947a92"
+            ),
+            svg.path(
+              svg.d := "m343 90c-109-29.3-222 35.6-251 145s35.6 222 145 251 222-35.6 251-145-35.6-222-145-251zm-86.7 362 0.276 0.71c1.17 3.19 3.56 5.78 6.64 7.2 3.08 1.42 6.6 1.56 9.79 0.387l48.4-17.8c3.18-1.18 6.71-1.04 9.79 0.388 3.08 1.42 5.47 4.01 6.64 7.2l0.19 0.56c2.1 5.85-0.304 12.4-5.71 15.4-93.2 22.2-188-30.7-218-122s14.7-190 103-227c5.14 0.502 9.54 3.91 11.3 8.76 2.58 6.98 10.3 10.6 17.3 7.99l15.7-5.8c3.19-1.18 6.71-1.04 9.79 0.387 3.08 1.42 5.47 4.01 6.64 7.2l0.19 0.56c1.17 3.18 1.03 6.71-0.39 9.79-1.42 3.08-4.01 5.47-7.2 6.64l-109 40.4c-3.19 1.17-5.78 3.56-7.2 6.64-1.42 3.08-1.56 6.6-0.388 9.79l0.19 0.56c1.17 3.19 3.56 5.78 6.64 7.2 3.08 1.42 6.6 1.56 9.79 0.388l80.1-29.5c3.18-1.17 6.7-1.03 9.79 0.388 3.08 1.42 5.47 4.01 6.64 7.2l0.19 0.56c1.17 3.18 1.03 6.7-0.39 9.79-1.42 3.08-4.01 5.47-7.2 6.64l-128 47.1c-3.19 1.17-5.78 3.56-7.2 6.64-1.42 3.08-1.56 6.6-0.387 9.79l0.19 0.56c1.17 3.19 3.56 5.78 6.64 7.2 3.08 1.42 6.6 1.56 9.79 0.388l157-57.7c3.18-1.18 6.7-1.04 9.79 0.387s5.47 4.01 6.64 7.2l0.467 1.27c1.17 3.19 1.04 6.71-0.388 9.79-1.42 3.08-4.01 5.47-7.2 6.64l-113 41.5c-3.19 1.17-5.78 3.56-7.2 6.64-1.42 3.08-1.56 6.6-0.387 9.79l0.19 0.56c1.17 3.18 3.56 5.78 6.64 7.2 3.08 1.42 6.6 1.56 9.79 0.388l51.8-19.1c3.19-1.17 6.71-1.03 9.79 0.39 3.08 1.42 5.47 4.01 6.64 7.2l0.19 0.56c1.17 3.18 1.03 6.71-0.39 9.79-1.42 3.08-4.01 5.47-7.2 6.64l-89.1 32.8c-3.18 1.17-5.77 3.56-7.2 6.64s-1.56 6.6-0.388 9.79l0.19 0.56c1.17 3.18 3.56 5.78 6.64 7.2 3.08 1.42 6.6 1.56 9.79 0.388l121-44.4c3.18-1.17 6.71-1.03 9.79 0.39 3.08 1.42 5.47 4.01 6.64 7.2l0.19 0.56c1.17 3.18 1.04 6.71-0.388 9.79s-4.01 5.47-7.2 6.64l-75 27.5c-3.19 1.17-5.78 3.56-7.2 6.64-1.42 3.08-1.56 6.6-0.387 9.79l0.19 0.56c1.17 3.19 3.56 5.78 6.64 7.2 3.08 1.42 6.6 1.56 9.79 0.387l94.1-34.5c3.18-1.18 6.71-1.04 9.79 0.388s5.47 4.01 6.64 7.2c2.43 6.58-0.893 13.9-7.45 16.4l-86.9 33.2c-3.18 1.18-5.76 3.57-7.18 6.66-1.41 3.08-1.55 6.6-0.367 9.78l-0.018-0.09z",
+              svg.fill := "#fff"
+            )
           )
         )
       )
     )
   }
-
 end Main
