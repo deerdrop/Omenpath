@@ -61,8 +61,9 @@ footer {
 
 h1 {
   font-family: "Beleren";
-  font-size: 3.8em;
+  font-size: 4.6em;
   line-height: 1.1;
+  color: white;
 }
 
 a {
@@ -212,8 +213,8 @@ button:enabled:focus-visible {
 .hidden {
   display: none;
   /*margin-top: -5%;
-  margin-bottom: -5%;*/
-  animation-play-state: paused;
+  margin-bottom: -5%;
+  animation-play-state: paused;*/
 }
 
 p.hidden {
