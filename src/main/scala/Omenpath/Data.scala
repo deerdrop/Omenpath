@@ -2,6 +2,7 @@ package Omenpath
 
 object Data:
   val newSeason: Int = 7                      // Number of the Season being rolled.
+  val midSeason: Boolean = true               // Whether or not this is a MidSeason set roll.
   val minCardCount: Int = 1500                // Minimum number of unique cards for a valid Season.
   val minSetCount: Int = 6                    // Minimum number of sets for a valid Season.
   val lockoutSeasons: Int = 2                 // Number of Seasons for which a set is not allowed to reappear.
@@ -20,4 +21,5 @@ object Data:
     "Season 4" -> Vector("XLN", "SOI", "OGW", "SOM", "ALA", "TSP", "M10"),
     "Season 5" -> Vector("ELD", "VOW", "AFR", "CSP", "PLC", "AFR", "DGM", "AER"),
     "Season 6" -> Vector("NEO", "THB", "RNA", "DKA", "CON", "LRW", "BOK", "ORI"),
+    "Season 7" -> Vector("STX", "RAV", "WWK", "M14", "THS", "DIS")
   )
