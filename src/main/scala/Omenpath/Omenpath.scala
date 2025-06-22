@@ -9,6 +9,7 @@ import _root_.Omenpath.Func.rotateVector
 import _root_.Omenpath.Data.slotTimeUntilStop
 import _root_.Omenpath.Data.slotKeyFrames
 import _root_.Omenpath.Func.getScryfallQuery
+import _root_.Omenpath.Data.minSetCount
 
 @main
 def Omenpath(): Unit =
@@ -37,7 +38,7 @@ object Main:
         )
       ),
       div(
-        visibility <-- tickStream.withCurrentValueOf(slotContainerClassSignal).map { (tick: Int, signal: String) => if (tick < slotKeyFrames(6)) "hidden" else signal},
+        visibility <-- tickStream.withCurrentValueOf(slotContainerClassSignal).map { (tick: Int, signal: String) => if (tick < slotKeyFrames(minSetCount)) "hidden" else signal},
         scryfallButton()
       )
     )
